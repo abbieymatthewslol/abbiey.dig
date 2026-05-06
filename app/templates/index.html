@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Digital Footprint Self-Audit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Digital Footprint Self-Audit</h1>
+        <p class="sub">
+          Use only identifiers you own or have explicit permission to check. This tool avoids “dark web”, Tor/onion, and
+          any shady third-party enrichment sources.
+        </p>
+      </header>
+
+      {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+      {% endif %}
+
+      <section class="card">
+        <h2>Step 1: Verify email (recommended)</h2>
+        {% if can_email %}
+          <form method="post" action="{{ url_for('main.request_email_code') }}" class="grid">
+            <label>
+              Email
+              <input type="email" name="email" value="{{ (form.email if form else '') }}" required />
+            </label>
+            <button type="submit">Send verification code</button>
+          </form>
+          <p class="hint">After verifying, you can run the scan using that same email.</p>
+        {% else %}
+          <p class="hint">
+            Email verification is not configured on the server. Set SMTP_HOST/SMTP_PORT/MAIL_FROM (and credentials if
+            needed) to enable it.
+          </p>
+        {% endif %}
+      </section>
+
+      <section class="card">
+        <h2>Step 2: Run scan</h2>
+        <form method="post" action="{{ url_for('main.scan') }}" class="grid">
+          <div class="row">
+            <label>
+              First name
+              <input type="text" name="first_name" value="{{ (form.first_name if form else '') }}" autocomplete="given-name" />
+            </label>
+            <label>
+              Middle name
+              <input type="text" name="middle_name" value="{{ (form.middle_name if form else '') }}" autocomplete="additional-name" />
+            </label>
+            <label>
+              Last name
+              <input type="text" name="last_name" value="{{ (form.last_name if form else '') }}" autocomplete="family-name" />
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              Email (must be verified to scan)
+              <input type="email" name="email" value="{{ (form.email if form else '') }}" autocomplete="email" />
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="phone" value="{{ (form.phone if form else '') }}" autocomplete="tel" />
+            </label>
+            <label>
+              Default phone region
+              <select name="default_region">
+                {% for r in ["US","AU","GB","CA","NZ","DE","FR","ES","IT","NL","SE","NO","DK"] %}
+                  <option value="{{ r }}" {% if form and form.default_region == r %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Usernames/handles (one per line or comma-separated)
+            <textarea name="usernames" rows="4">{{ (form.usernames if form else '') }}</textarea>
+          </label>
+
+          <button type="submit">Generate report</button>
+        </form>
+      </section>
+
+      <footer class="footer">
+        <p class="hint">Tip: Add API keys in environment variables for supported sources (e.g., HIBP_API_KEY).</p>
+      </footer>
+    </main>
+  </body>
+</html>
+

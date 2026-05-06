@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Footprint report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Digital Footprint Report</h1>
+        <p class="sub">Generated in {{ report.elapsed_ms }} ms</p>
+        <div class="actions">
+          <a class="btn" href="{{ url_for('main.index') }}">New scan</a>
+          <a class="btn" href="{{ url_for('main.report_json') }}">Download JSON</a>
+        </div>
+      </header>
+
+      <section class="card">
+        <h2>Input</h2>
+        <div class="kv">
+          <div><span class="k">Name</span><span class="v">{{ report.input.name.first }} {{ report.input.name.middle }} {{ report.input.name.last }}</span></div>
+          <div><span class="k">Email</span><span class="v">{{ report.input.email }}</span></div>
+          <div><span class="k">Phone</span><span class="v">{{ report.input.phone }}</span></div>
+          <div><span class="k">Usernames</span><span class="v">{{ report.input.usernames|join(", ") }}</span></div>
+        </div>
+      </section>
+
+      {% if report.results.email %}
+        <section class="card">
+          <h2>Email</h2>
+          <div class="kv">
+            <div><span class="k">Normalized</span><span class="v">{{ report.results.email.normalized or "" }}</span></div>
+            <div><span class="k">Valid format</span><span class="v">{{ report.results.email.valid_format }}</span></div>
+            <div><span class="k">Domain</span><span class="v">{{ report.results.email.domain or "" }}</span></div>
+          </div>
+
+          {% if report.results.email.dns %}
+            <h3>DNS</h3>
+            <div class="kv">
+              <div><span class="k">MX</span><span class="v">{{ report.results.email.dns.mx_records|join(", ") }}</span></div>
+              <div><span class="k">A</span><span class="v">{{ report.results.email.dns.a_records|join(", ") }}</span></div>
+            </div>
+          {% endif %}
+
+          {% if report.results.email.gravatar %}
+            <h3>Gravatar</h3>
+            <div class="kv">
+              <div><span class="k">Has Gravatar</span><span class="v">{{ report.results.email.gravatar.has_gravatar }}</span></div>
+              <div><span class="k">URL</span><span class="v"><a href="{{ report.results.email.gravatar.url }}" target="_blank" rel="noreferrer">{{ report.results.email.gravatar.url }}</a></span></div>
+            </div>
+          {% endif %}
+
+          {% if report.results.email.hibp and report.results.email.hibp.enabled %}
+            <h3>Breaches (HIBP)</h3>
+            {% if report.results.email.hibp.error %}
+              <div class="alert alert-warn">{{ report.results.email.hibp.error }}</div>
+            {% else %}
+              {% if report.results.email.hibp.breaches|length == 0 %}
+                <p class="hint">No breaches found.</p>
+              {% else %}
+                <ul class="list">
+                  {% for b in report.results.email.hibp.breaches %}
+                    <li>
+                      <div class="li-title">{{ b.title }} ({{ b.breach_date }})</div>
+                      <div class="li-meta">
+                        Domain: {{ b.domain or "n/a" }} · Records: {{ b.pwn_count }} · Verified: {{ b.is_verified }}
+                      </div>
+                      {% if b.data_classes %}
+                        <div class="li-meta">Data: {{ b.data_classes|join(", ") }}</div>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+          {% elif report.results.email.hibp and not report.results.email.hibp.enabled %}
+            <p class="hint">HIBP is disabled (set HIBP_API_KEY to enable).</p>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {% if report.results.phone %}
+        <section class="card">
+          <h2>Phone</h2>
+          <div class="kv">
+            <div><span class="k">Valid</span><span class="v">{{ report.results.phone.valid }}</span></div>
+            <div><span class="k">Possible</span><span class="v">{{ report.results.phone.possible }}</span></div>
+            <div><span class="k">Region</span><span class="v">{{ report.results.phone.region_code }}</span></div>
+            <div><span class="k">E.164</span><span class="v">{{ report.results.phone.e164 }}</span></div>
+            <div><span class="k">International</span><span class="v">{{ report.results.phone.international }}</span></div>
+            <div><span class="k">National</span><span class="v">{{ report.results.phone.national }}</span></div>
+          </div>
+        </section>
+      {% endif %}
+
+      {% if report.results.usernames %}
+        <section class="card">
+          <h2>Usernames</h2>
+          {% for u in report.results.usernames.usernames %}
+            <h3>{{ u.username }}</h3>
+            <ul class="list">
+              {% for p in u.profiles %}
+                <li>
+                  <div class="li-title">{{ p.site }}: <a href="{{ p.url }}" target="_blank" rel="noreferrer">{{ p.url }}</a></div>
+                  <div class="li-meta">Status: {{ p.status }}{% if p.status_code %} ({{ p.status_code }}){% endif %}</div>
+                  {% if p.error %}<div class="li-meta">Error: {{ p.error }}</div>{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </section>
+      {% endif %}
+    </main>
+  </body>
+</html>
+
