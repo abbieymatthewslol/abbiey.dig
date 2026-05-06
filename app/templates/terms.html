@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms of Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Terms of Service</h1>
+        <p class="sub">Effective date: 6 May 2026</p>
+        <div class="actions">
+          <a class="btn" href="{{ url_for('main.index') }}">Home</a>
+          <a class="btn" href="{{ url_for('main.privacy') }}">Privacy</a>
+        </div>
+      </header>
+
+      <section class="card">
+        <p class="sub">
+          These Terms of Service (Terms) form a binding agreement between you and Abbiey Dig (we, us, our) governing your
+          access to and use of abbieydig.online (the Service). By accessing or using the Service, or by ticking an “I
+          agree” box, you agree to be bound by these Terms.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>1. Eligibility and authority</h2>
+        <p class="sub">
+          You must be able to form a binding contract to use the Service. If you use the Service on behalf of an
+          organization, you represent you have authority to bind that organization to these Terms.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>2. Important rule: use only identifiers you own or are authorized to use</h2>
+        <p class="sub">
+          You may use the Service only with identifiers you own or for which you have explicit permission from the
+          relevant person. You must not use the Service to harass, stalk, surveil, discriminate, or otherwise misuse
+          another person’s information.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>3. Acceptable use</h2>
+        <ul class="list">
+          <li>
+            <div class="li-title">No unlawful use</div>
+            <div class="li-meta">You must comply with all applicable laws and third-party terms when using the Service.</div>
+          </li>
+          <li>
+            <div class="li-title">No interference</div>
+            <div class="li-meta">
+              You must not disrupt, overload, probe, or attempt to circumvent security or rate limits, or scrape the
+              Service in a manner that materially impacts it.
+            </div>
+          </li>
+          <li>
+            <div class="li-title">No reverse engineering</div>
+            <div class="li-meta">You must not reverse engineer, decompile, or attempt to extract source code except where permitted by law.</div>
+          </li>
+          <li>
+            <div class="li-title">Content responsibility</div>
+            <div class="li-meta">
+              If you submit content or identifiers, you are responsible for ensuring you have rights and permissions to
+              do so.
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Reports and third-party data</h2>
+        <p class="sub">
+          The Service generates reports by making automated requests to public endpoints and third-party services. Third
+          parties control their own services, and availability and accuracy of results may vary over time. We do not
+          guarantee that results are complete, accurate, or up to date.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>5. Privacy</h2>
+        <p class="sub">
+          Our <a href="{{ url_for('main.privacy') }}">Privacy Policy</a> explains how we collect and use information.
+          By using the Service, you agree to the practices described in the Privacy Policy.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>6. Intellectual property</h2>
+        <p class="sub">
+          We and our licensors own the Service and all related intellectual property rights. Subject to these Terms, we
+          grant you a limited, non-exclusive, non-transferable license to access and use the Service for your own lawful
+          purposes.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>7. Suspension and termination</h2>
+        <p class="sub">
+          We may suspend or restrict access to the Service if we reasonably believe you have breached these Terms or if
+          needed to protect the Service or others. We may modify or discontinue the Service at any time.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>8. Disclaimers</h2>
+        <p class="sub">
+          The Service is provided “as is” and “as available”. To the maximum extent permitted by law, we disclaim all
+          warranties, express or implied, including merchantability, fitness for a particular purpose, and
+          non-infringement. The Service is informational only and does not constitute legal, financial, or security
+          advice.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>9. Limitation of liability</h2>
+        <p class="sub">
+          To the maximum extent permitted by law, we will not be liable for any indirect, incidental, special,
+          consequential, or punitive damages, or any loss of profits, revenue, data, goodwill, or business opportunities,
+          arising out of or relating to your use of the Service.
+        </p>
+        <p class="sub">
+          Where liability cannot be excluded under the Australian Consumer Law or other applicable law, our liability is
+          limited to the maximum extent permitted, and may include (at our option) resupplying the services or paying
+          the cost of having the services resupplied.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>10. Indemnity</h2>
+        <p class="sub">
+          To the maximum extent permitted by law, you agree to indemnify and hold us harmless from claims, liabilities,
+          damages, losses, and expenses (including reasonable legal fees) arising out of or related to your use of the
+          Service, your content, or your breach of these Terms.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>11. Governing law</h2>
+        <p class="sub">
+          These Terms are governed by the laws of Australia, and you submit to the non-exclusive jurisdiction of the
+          courts in Australia.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>12. Changes</h2>
+        <p class="sub">
+          We may update these Terms from time to time. Updated Terms will be posted on this page with a new effective
+          date. Your continued use of the Service after changes become effective constitutes acceptance of the updated
+          Terms.
+        </p>
+      </section>
+
+      <footer class="footer">
+        <p class="hint"><a href="{{ url_for('main.privacy') }}">Privacy Policy</a> · <a href="{{ url_for('main.index') }}">Home</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

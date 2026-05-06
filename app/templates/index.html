@@ -81,14 +81,30 @@
             <textarea name="usernames" rows="4">{{ (form.usernames if form else '') }}</textarea>
           </label>
 
+          <label>
+            <span>
+              <input
+                type="checkbox"
+                name="agree"
+                value="1"
+                required
+                {% if form and form.get('agree') %}checked{% endif %}
+              />
+              I agree to the <a href="{{ url_for('main.terms') }}" target="_blank" rel="noreferrer">Terms of Service</a>
+              and <a href="{{ url_for('main.privacy') }}" target="_blank" rel="noreferrer">Privacy Policy</a>.
+            </span>
+          </label>
+
           <button type="submit">Generate report</button>
         </form>
       </section>
 
       <footer class="footer">
-        <p class="hint">Tip: Add API keys in environment variables for supported sources (e.g., HIBP_API_KEY).</p>
+        <p class="hint">
+          Tip: Add API keys in environment variables for supported sources (e.g., HIBP_API_KEY). ·
+          <a href="{{ url_for('main.terms') }}">Terms</a> · <a href="{{ url_for('main.privacy') }}">Privacy</a>
+        </p>
       </footer>
     </main>
   </body>
 </html>
-

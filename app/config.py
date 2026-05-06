@@ -12,4 +12,4 @@ class Config:
         self.MAIL_FROM = os.getenv("MAIL_FROM", "")
         self.HIBP_API_KEY = os.getenv("HIBP_API_KEY", "")
         self.HTTP_TIMEOUT_SECONDS = float(os.getenv("HTTP_TIMEOUT_SECONDS", "8"))
-
+        self.REPORT_TTL_SECONDS = int(os.getenv("REPORT_TTL_SECONDS", "3600"))

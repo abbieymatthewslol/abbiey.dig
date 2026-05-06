@@ -10,6 +10,7 @@ from .storage import load_report, save_report, set_email_code, verify_email_code
 
 
 bp = Blueprint("main", __name__)
+TERMS_VERSION = "2026-05-06"
 
 
 @bp.before_app_request
@@ -21,6 +22,16 @@ def ensure_session_id() -> None:
 @bp.get("/")
 def index() -> str:
     return render_template("index.html", can_email=can_send_email())
+
+
+@bp.get("/terms")
+def terms() -> str:
+    return render_template("terms.html")
+
+
+@bp.get("/privacy")
+def privacy() -> str:
+    return render_template("privacy.html")
 
 
 @bp.post("/request-email-code")
@@ -56,6 +67,16 @@ def verify_email() -> str:
 @bp.post("/scan")
 def scan() -> str:
     started_at = time.time()
+
+    if not (request.form.get("agree") or "").strip():
+        return render_template(
+            "index.html",
+            can_email=can_send_email(),
+            error="You must agree to the Terms and Privacy Policy to run a scan.",
+            form=request.form,
+        )
+    session["agreed_terms_version"] = TERMS_VERSION
+    session["agreed_terms_at"] = int(time.time())
 
     first_name = (request.form.get("first_name") or "").strip()
     middle_name = (request.form.get("middle_name") or "").strip()
@@ -97,13 +118,13 @@ def scan() -> str:
         report["results"]["usernames"] = username_checks.run(usernames)
 
     report["elapsed_ms"] = int((time.time() - started_at) * 1000)
-    save_report(session["sid"], report)
+    save_report(session["sid"], report, ttl_seconds=int(current_app.config.get("REPORT_TTL_SECONDS", 3600)))
     return render_template("report.html", report=report)
 
 
 @bp.get("/report.json")
 def report_json():
-    rep = load_report(session.get("sid", ""))
+    rep = load_report(session.get("sid", ""), ttl_seconds=int(current_app.config.get("REPORT_TTL_SECONDS", 3600)))
     if not rep:
         return jsonify({"error": "No report available"}), 404
     return jsonify(rep)
@@ -111,4 +132,3 @@ def report_json():
 
 def _generate_code() -> str:
     return f"{secrets.randbelow(1000000):06d}"
-

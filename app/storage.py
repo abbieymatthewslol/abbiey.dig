@@ -30,13 +30,28 @@ def verify_email_code(email: str, code: str, ttl_seconds: int = 900) -> bool:
     return True
 
 
-_reports: dict[str, dict[str, Any]] = {}
+@dataclass(frozen=True)
+class ReportRecord:
+    report: dict[str, Any]
+    created_at: float
 
 
-def save_report(session_id: str, report: dict[str, Any]) -> None:
-    _reports[session_id] = report
+_reports: dict[str, ReportRecord] = {}
 
 
-def load_report(session_id: str) -> dict[str, Any] | None:
-    return _reports.get(session_id)
+def _prune_reports(ttl_seconds: int) -> None:
+    now = time.time()
+    expired = [sid for sid, rec in _reports.items() if now - rec.created_at > ttl_seconds]
+    for sid in expired:
+        _reports.pop(sid, None)
 
+
+def save_report(session_id: str, report: dict[str, Any], ttl_seconds: int = 3600) -> None:
+    _prune_reports(ttl_seconds)
+    _reports[session_id] = ReportRecord(report=report, created_at=time.time())
+
+
+def load_report(session_id: str, ttl_seconds: int = 3600) -> dict[str, Any] | None:
+    _prune_reports(ttl_seconds)
+    rec = _reports.get(session_id)
+    return rec.report if rec else None
